@@ -118,19 +118,9 @@ export class FormBuilderComponent {
   }
 
   updateConditionalValue(secIdx: number, qIdx: number, value: any) {
-    const sections = [...this.sections()];
-    const section = { ...sections[secIdx] };
-    const field = { ...section.fields[qIdx] };
-
-    if (field.conditional) {
-      field.conditional = {
-        ...field.conditional,
-        value
-      };
+    if (this.sections()[secIdx].fields[qIdx].conditional) {
+      this.sections()[secIdx].fields[qIdx].conditional!.value = value;
+      this.sections.set([...this.sections()]);
     }
-
-    section.fields[qIdx] = field;
-    sections[secIdx] = section;
-    this.sections.set(sections);
   }
 }
