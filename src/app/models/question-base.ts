@@ -1,30 +1,23 @@
-export class QuestionBase<T> {
-  value?: T;
-  key: string;
-  label: string;
-  required: boolean;
-  order: number;
-  controlType: string;
-  type: string;
-  options: {key: string; value: string}[];
+export interface FieldCondition {
+  questionId: string;
+  operator: '==' | '!=' | '>' | '<';
+  value: any;
+}
 
-  constructor(options: {
-    value?: T;
-    key?: string;
-    label?: string;
-    required?: boolean;
-    order?: number;
-    controlType?: string;
-    type?: string;
-    options?: {key: string; value: string}[];
-  } = {}) {
-    this.value = options.value;
-    this.key = options.key || '';
-    this.label = options.label || '';
-    this.required = !!options.required;
-    this.order = options.order === undefined ? 1 : options.order;
-    this.controlType = options.controlType || '';
-    this.type = options.type || '';
-    this.options = options.options || [];
+export class QuestionBase<T = any> {
+  id!: string;                // unique per form
+  key = '';                   // form control name
+  label = '';
+  required = false;
+  order = 1;
+  controlType = 'textbox';    // 'textbox' | 'dropdown' | ...
+  type?: string;              // html input type
+  options?: { key: string; value: string }[]; // dropdown choices
+  mapTo?: string;             // e.g. 'Client.Email'
+  conditional?: FieldCondition;
+  value?: T;                  // form control value
+
+  constructor(init?: Partial<QuestionBase>) {
+    Object.assign(this, init);
   }
 }

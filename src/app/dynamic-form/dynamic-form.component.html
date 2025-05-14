@@ -1,9 +1,16 @@
-<form (ngSubmit)="onSubmit()" [formGroup]="form">
-  <ng-container *ngFor="let question of questions">
-    <app-dynamic-form-question [question]="question" [form]="form"></app-dynamic-form-question>
+<form [formGroup]="form" (ngSubmit)="submit()" class="dynamic-form">
+  <ng-container *ngFor="let sec of sections">
+    <h3>{{ sec.title }}</h3>
+    <ng-container *ngFor="let q of sec.fields">
+      <app-dynamic-form-question
+        *ngIf="isVisible(q)"
+        [question]="q"
+        [form]="form"
+      ></app-dynamic-form-question>
+    </ng-container>
   </ng-container>
-  <button type="submit" [disabled]="!form.valid">Save</button>
+  <button [disabled]="form.invalid">Submit</button>
 </form>
-<div *ngIf="payLoad">
-  <strong>Saved the following values</strong><br>{{ payLoad }}
-</div>
+<pre *ngIf="submitted">
+  {{ { answers: submitted } | json }}
+</pre>

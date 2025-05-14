@@ -1,34 +1,60 @@
-import { Component, Input, OnInit, Signal, signal } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { DynamicFormQuestionComponent } from './dynamic-form-question.component';
-import { QuestionBase } from '../models/question-base';
+import { FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { QuestionControlService } from '../services/question-control.service';
+import { FormSection } from '../models/form-section';
+import { QuestionBase } from '../models/question-base';
+import { TemplateStoreService } from '../services/template-store.service';
+import { DynamicFormQuestionComponent } from './dynamic-form-question.component';
 
 @Component({
   selector: 'app-dynamic-form',
   standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, DynamicFormQuestionComponent],
   templateUrl: './dynamic-form.component.html',
   styleUrls: ['../app.component.css'],
-  providers: [QuestionControlService],
-  imports: [CommonModule, DynamicFormQuestionComponent, ReactiveFormsModule],
 })
 export class DynamicFormComponent implements OnInit {
-  @Input() questions: QuestionBase<string>[] = [];
+  @Input() sections: FormSection[] = [];
   form!: FormGroup;
-  payLoad = '';
+  submitted?: any;
 
-  constructor(private qcs: QuestionControlService) {}
+  constructor(
+    private qcs: QuestionControlService,
+    private store: TemplateStoreService
+  ) {}
 
   ngOnInit() {
-    this.form = this.qcs.toFormGroup(this.questions);
+    if (!this.sections.length) {
+      this.sections = this.store.loadTemplate()?.sections || [];
+    }
+    const allQs = this.sections.flatMap(s => s.fields);
+    this.form = this.qcs.toFormGroup(allQs);
+
+    // wire conditionals
+    allQs.forEach(q => this.initConditional(q));
   }
 
-  ngOnChanges() {
-    this.form = this.qcs.toFormGroup(this.questions);
+  private initConditional(q: QuestionBase) {
+    if (!q.conditional?.questionId) return;
+    const depCtrl = this.form.get(q.conditional.questionId) as FormControl;
+    const toggle = () => {
+      const visible = depCtrl.value === q.conditional!.value;
+      const ctrl = this.form.get(q.key)!;
+      visible ? ctrl.enable() : (ctrl.reset(), ctrl.disable());
+    };
+    depCtrl.valueChanges.subscribe(toggle);
+    toggle();
   }
 
-  onSubmit() {
-    this.payLoad = JSON.stringify(this.form.getRawValue());
+  isVisible(q: QuestionBase) {
+    if (!q.conditional?.questionId) return true;
+    const depVal = this.form.get(q.conditional.questionId)?.value;
+    return depVal === q.conditional.value;
+  }
+
+  submit() {
+    this.submitted = this.form.getRawValue();
+    this.store.saveResponse(this.submitted);
   }
 }

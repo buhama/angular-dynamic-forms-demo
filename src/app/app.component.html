@@ -178,21 +178,9 @@
 </style>
 
 <main class="main">
-  <div>
-    <nav>
-      <a (click)="tab = 'build'">Build Form</a>
-      <a (click)="tab = 'view'">View Form</a>
-      <a (click)="tab = 'results'">View Results</a>
-    </nav>
-    <div *ngIf="tab === 'build'">
-      <app-form-builder (questionsChange)="onQuestionsChange($event)"></app-form-builder>
-    </div>
-    <div *ngIf="tab === 'view'">
-      <app-dynamic-form [questions]="questions"></app-dynamic-form>
-    </div>
-    <div *ngIf="tab === 'results'">
-      <!-- Results view here -->
-    </div>
+  <div class="container">
+    <h1>{{ title }}</h1>
+    <app-form-builder></app-form-builder>
   </div>
 </main>
 

@@ -1,34 +1,58 @@
 <div class="form-builder-container">
-  <h2 class="form-builder-title">Build Form</h2>
-  <div class="questions-list">
-    <div *ngFor="let q of questions(); let i = index" class="question-card">
-      <div class="question-label">{{ q.label }}</div>
-      <div class="question-type">Type: <span class="type-pill">{{ q.controlType }}</span></div>
+  <h2>Build Form</h2>
+
+  <!-- Sections -->
+  <div *ngFor="let sec of sections(); let si = index" class="section-card">
+    <h3>
+      <input [ngModel]="sections()[si].title" (ngModelChange)="sections()[si].title = $event" />
+      <button (click)="removeSection(si)">✕</button>
+    </h3>
+
+    <!-- Fields -->
+    <div *ngFor="let q of sec.fields; let qi = index" class="question-card">
+      <input [ngModel]="q.label" (ngModelChange)="q.label = $event" placeholder="Label" />
+      <select [ngModel]="q.controlType" (ngModelChange)="q.controlType = $event">
+        <option value="textbox">Input</option>
+        <option value="dropdown">Dropdown</option>
+      </select>
+      <input [ngModel]="q.mapTo" (ngModelChange)="q.mapTo = $event" placeholder="mapTo (opt)" />
+
+      <!-- simple conditional: depends on prev answer == value -->
+      <select [ngModel]="q.conditional?.questionId" (ngModelChange)="updateConditionalQuestionId(si, qi, $event)">
+        <option [ngValue]="undefined">(no condition)</option>
+        <option *ngFor="let other of sec.fields" [ngValue]="other.id">
+          show if {{ other.label }} ==
+        </option>
+      </select>
+      <input
+        *ngIf="q.conditional?.questionId"
+        [ngModel]="q.conditional?.value"
+        (ngModelChange)="updateConditionalValue(si, qi, $event)"
+        placeholder="value"
+      />
+
+      <button (click)="removeField(si, qi)">🗑️</button>
     </div>
-    <div *ngIf="adding()" class="add-form-card">
-      <div>
-        <input
-          class="question-label-input"
-          [value]="newLabel()"
-          (input)="newLabel.set($any($event.target).value)"
-          placeholder="Question label"
-        />
-        <select
-          class="question-type-select"
-          [value]="newType()"
-          (change)="newType.set($any($event.target).value)"
-        >
-          <option value="textbox">Input</option>
-          <option value="dropdown">Dropdown</option>
-        </select>
-      </div>
-      <button class="add-question-btn" (click)="confirmAdd()">Confirm</button>
-      <button class="add-question-btn cancel" (click)="cancelAdd()" type="button">Cancel</button>
+
+    <!-- add field prompt -->
+    <div *ngIf="addingQ()?.sec === si" class="add-field">
+      <input #label placeholder="Question label" />
+      <input #map placeholder="mapTo (optional)" />
+      <button (click)="confirmAddField(label.value, map.value)">add</button>
+      <button (click)="addingQ.set(null)">cancel</button>
     </div>
-    <button *ngIf="!adding()" class="add-question-btn" (click)="startAdd()">+ Add Question</button>
+
+    <button (click)="startAddField(si, 'textbox')">+ Text</button>
+    <button (click)="startAddField(si, 'dropdown')">+ Dropdown</button>
   </div>
-  <div class="preview-section">
-    <h3 class="preview-title">Live Preview</h3>
-    <app-dynamic-form [questions]="questions()"></app-dynamic-form>
-  </div>
+
+  <button (click)="addSection()">+ Section</button>
+
+
+
+  <h3 class="preview-title">Live Preview</h3>
+  <app-dynamic-form [sections]="sections()"></app-dynamic-form>
+
+  <h3 class="json-title">Current Template JSON</h3>
+  <pre class="json-block">{{ { sections: sections() } | json }}</pre>
 </div>

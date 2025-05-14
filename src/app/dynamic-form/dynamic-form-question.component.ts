@@ -15,6 +15,22 @@ export class DynamicFormQuestionComponent {
   @Input() form!: FormGroup;
 
   get isValid() {
-    return this.form.controls[this.question.key].valid;
+    const control = this.form.get(this.question.key);
+    return control ? control.valid : true;
+  }
+
+  get isDirty() {
+    const control = this.form.get(this.question.key);
+    return control ? control.dirty : false;
+  }
+
+  get errorMessage() {
+    const control = this.form.get(this.question.key);
+    if (!control || !control.errors || !this.isDirty) return '';
+
+    if (control.errors['required']) {
+      return `${this.question.label} is required`;
+    }
+    return '';
   }
 }

@@ -31,14 +31,113 @@ nav a:hover, nav a.active {
   box-shadow: 0 2px 8px rgba(59,130,246,0.08);
 }
 
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+h1 {
+  margin-bottom: 2rem;
+  color: #333;
+}
+
 .form-builder-container {
   background: #fff;
-  border-radius: 1.25rem;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-  padding: 2.5rem 2rem 2rem 2rem;
-  max-width: 420px;
-  margin: 2rem auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
 }
+
+.section-card {
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-card h3 {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.section-card h3 input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.question-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.question-card input,
+.question-card select {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.add-field {
+  background: #f8f9fa;
+  border: 1px dashed #ddd;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+button {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+button[disabled] {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.preview-title {
+  margin: 2rem 0 1rem;
+  color: #666;
+}
+
+.dynamic-form {
+  background: #fff;
+  border-radius: 6px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+pre {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
 .form-builder-title {
   font-size: 2rem;
   font-weight: 600;
@@ -48,16 +147,6 @@ nav a:hover, nav a.active {
 }
 .questions-list {
   margin-bottom: 2rem;
-}
-.question-card {
-  background: #f3f4f6;
-  border-radius: 0.75rem;
-  padding: 1rem 1.25rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 .question-label {
   font-weight: 500;
@@ -99,12 +188,6 @@ nav a:hover, nav a.active {
   border-radius: 1rem;
   padding: 1.5rem 1rem 1rem 1rem;
   box-shadow: 0 1px 6px rgba(0,0,0,0.04);
-}
-.preview-title {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: #555;
-  margin-bottom: 1rem;
 }
 
 /* Dynamic form styles */
