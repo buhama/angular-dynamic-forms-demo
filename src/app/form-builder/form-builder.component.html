@@ -1,0 +1,34 @@
+<div class="form-builder-container">
+  <h2 class="form-builder-title">Build Form</h2>
+  <div class="questions-list">
+    <div *ngFor="let q of questions(); let i = index" class="question-card">
+      <div class="question-label">{{ q.label }}</div>
+      <div class="question-type">Type: <span class="type-pill">{{ q.controlType }}</span></div>
+    </div>
+    <div *ngIf="adding()" class="add-form-card">
+      <div>
+        <input
+          class="question-label-input"
+          [value]="newLabel()"
+          (input)="newLabel.set($any($event.target).value)"
+          placeholder="Question label"
+        />
+        <select
+          class="question-type-select"
+          [value]="newType()"
+          (change)="newType.set($any($event.target).value)"
+        >
+          <option value="textbox">Input</option>
+          <option value="dropdown">Dropdown</option>
+        </select>
+      </div>
+      <button class="add-question-btn" (click)="confirmAdd()">Confirm</button>
+      <button class="add-question-btn cancel" (click)="cancelAdd()" type="button">Cancel</button>
+    </div>
+    <button *ngIf="!adding()" class="add-question-btn" (click)="startAdd()">+ Add Question</button>
+  </div>
+  <div class="preview-section">
+    <h3 class="preview-title">Live Preview</h3>
+    <app-dynamic-form [questions]="questions()"></app-dynamic-form>
+  </div>
+</div>

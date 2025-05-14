@@ -1,0 +1,9 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="form">
+  <ng-container *ngFor="let question of questions">
+    <app-dynamic-form-question [question]="question" [form]="form"></app-dynamic-form-question>
+  </ng-container>
+  <button type="submit" [disabled]="!form.valid">Save</button>
+</form>
+<div *ngIf="payLoad">
+  <strong>Saved the following values</strong><br>{{ payLoad }}
+</div>
